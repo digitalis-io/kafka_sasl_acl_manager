@@ -1,0 +1,13 @@
+---
+# This needs to run on all the kafka brokers as the Jaas.conf needs to exist on all the nodes.
+- hosts: kafka_brokers
+  serial: "{{ serial_override | default(1) }}"
+  become: true
+  roles:
+  - sasl_users
+
+- hosts: kafka_management
+  become: true
+  roles:
+  - topics
+  - kafka_acl

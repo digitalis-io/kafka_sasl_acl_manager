@@ -1,0 +1,31 @@
+---
+- name: update ACL write access for producers
+  block:
+  - name: execute command
+    shell: >
+      "unset KAFKA_JMX_OPTS;
+      {{ kafka_path }}/bin/kafka-acls.sh
+      --authorizer kafka.security.auth.SimpleAclAuthorizer
+      --authorizer-properties zookeeper.connect={{ inventory_hostname }}:2181
+      --add
+      --allow-principal User:{{ item.1 }}
+      --producer
+      --topic {{ item.0.topic }};
+      sleep 5"
+    loop: "{{ topics_acl_users|subelements('producers') }}"
+    when: item.0
+
+  - name: update ACL read access for consumers
+    shell: >
+      "unset KAFKA_JMX_OPTS;
+      {{ kafka_path }}/bin/kafka-acls.sh
+      --authorizer kafka.security.auth.SimpleAclAuthorizer
+      --authorizer-properties zookeeper.connect={{ inventory_hostname }}:2181
+      --add
+      --allow-principal User:{{ item.1.username }}
+      --consumer
+      --topic {{ item.0.topic }}
+      --group {{ item.1.group }};
+      sleep 2"
+    loop: "{{ topics_acl_users|subelements('consumers') }}"
+    when: item.0

@@ -1,0 +1,19 @@
+---
+# The default SASL Admin User. 
+# This user needs to exist and has a default username of 'admin' 
+# The passwords can be encoded/hashed with vault
+admin_user_password: default_password_can_be_vaulted
+
+#################################################
+# List of users to add to the Kafka SASL File
+# Please keep formatting strict
+# Add Username and Password for every SASL user 
+# that needs access to Kafka
+kafka_sasl_users:
+- name: user1
+  password: password1
+- name: user2
+  password: password2
+- name: user3
+  password: password3
+#################################################

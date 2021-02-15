@@ -1,0 +1,12 @@
+---
+# Update the Jaas.conf file with the new users. If the users are different it should then restart the containers to
+# apply the new changes.
+- name: update jaas.conf file
+  become: true
+  template:
+    src: ./templates/jaas.j2
+    dest: "{{ kafka_path }}"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 'u=rw,g=r,o='
+  notify: "restart kafka"

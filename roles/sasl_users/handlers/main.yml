@@ -1,0 +1,6 @@
+- name: restart kafka
+  shell: |
+    set -e
+    export PATH=$PATH:/usr/local/bin
+    docker stop kafka
+    docker start kafka

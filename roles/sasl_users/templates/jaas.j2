@@ -1,0 +1,13 @@
+KafkaServer {
+  org.apache.kafka.common.security.plain.PlainLoginModule required
+  username="admin"
+  password="{{ admin_user_password }}"
+  user_admin="{{ admin_user_password }}"
+  {% for item in kafka_sasl_users -%}
+  {% if loop.last -%}
+  user_{{ item.name }}="{{ item.password }}";
+};
+  {%- else -%}
+  user_{{ item.name }}="{{ item.password }}"
+  {% endif -%}
+  {% endfor -%}
