@@ -1,0 +1,5 @@
+zookeeper_id: 1
+zookeeper_servers: 
+  - 'loglh1v.vagrant.test'
+zookeeper-nodes:
+  - 'loglh1v.vagrant.test'

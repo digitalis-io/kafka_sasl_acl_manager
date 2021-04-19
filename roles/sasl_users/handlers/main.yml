@@ -1,6 +1,2 @@
 - name: restart kafka
-  shell: |
-    set -e
-    export PATH=$PATH:/usr/local/bin
-    docker stop kafka
-    docker start kafka
+  systemd: name=kafka state=restarted daemon_reload=yes

@@ -1,0 +1,26 @@
+---
+- name: Configure Topics
+  hosts: kafka_brokers[0]
+  become: true
+  vars_files:
+    - "../group_vars/all.yml"
+    - "../group_vars/kafka_brokers.yml"
+    - "../group_vars/zookeeper_nodes.yml"
+  tasks:
+    - name: Configure Topics
+      include_role:
+        name: topics
+      when: configure_topics
+
+- name: Configure ACL's
+  hosts: kafka_brokers[0]
+  become: true
+  vars_files:
+    - "../group_vars/all.yml"
+    - "../group_vars/kafka_brokers.yml"
+    - "../group_vars/zookeeper_nodes.yml"
+  tasks:
+    - name: Configure ACL's
+      include_role:
+        name: kafka_acl
+      when: configure_acl
