@@ -125,7 +125,7 @@ Examples
 As part of the ACL play it will create a default kafkaclient.jaas.conf file as used in the examples above.
 This has the basic setup needed to connect to Kafka from any client using SASL_PLAINTEXT Authentication.
 
-If you feel like contributing please contact myself or any of the team members at https://www.digitalis.io
+If you feel like contributing please contact myself or any of the team members at https://digitalis.io/
 
 Thanks.
 
