@@ -1,0 +1,97 @@
+---
+# - name: Set authorized key took from file
+#   hosts: all
+#   serial: "{{ serial_override | default(1) }}"
+#   become: true
+#   tasks:
+#     - name: Copy ssh key
+#       authorized_key:
+#         user: vagrant
+#         state: present
+#         key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+# - name: Install OpenJDK
+#   hosts: all
+#   serial: "{{ serial_override | default(1) }}"
+#   become: true
+#   vars_files:
+#     - "../group_vars/all.yml"
+#   tasks:
+#   - name: Install openjdk
+#     include_role:
+#       name: openjdk
+#     when: install_openjdk
+
+- name: Install Zookeeper Opensource
+  hosts: zookeeper_nodes
+  serial: "{{ serial_override | default(1) }}"
+  become: true
+  vars_files:
+    - "../group_vars/all.yml"
+    - "../group_vars/kafka_brokers.yml"
+    - "../group_vars/zookeeper_nodes.yml"
+  tasks:
+  - name: Install zookeeper
+    include_role:
+      name: zookeeper
+    when: install_zookeeper_opensource
+
+# - name: Install Zookeeper Confluent
+#   hosts: zookeeper_nodes
+#   serial: "{{ serial_override | default(1) }}"
+#   become: true
+#   vars_files:
+#     - "./group_vars/all.yml"
+#     - "./group_vars/kafka_brokers.yml"
+#     - "./group_vars/zookeeper_nodes.yml"
+#   tasks:
+#   - name: Install openjdk
+#     include_role:
+#       name: openjdk
+#     when: install_openjdk
+#   - name: Install zookeeper
+#     include_role:
+#       name: zookeeper
+#     when: install_zookeeper_confluent
+
+- name: Install Kafka Opensource
+  hosts: kafka_brokers
+  serial: "{{ serial_override | default(1) }}"
+  become: true
+  vars_files:
+    - "../group_vars/all.yml"
+    - "../group_vars/kafka_brokers.yml"
+    - "../group_vars/zookeeper_nodes.yml"
+  tasks:
+  - name: Install kafka
+    include_role:
+      name: kafka
+    when: install_kafka_opensource
+
+# - name: Install Kafka Confluent
+#   hosts: kafka_brokers
+#   serial: "{{ serial_override | default(1) }}"
+#   become: true
+#   vars_files:
+#     - "./group_vars/all.yml"
+#     - "./group_vars/kafka_brokers.yml"
+#     - "./group_vars/zookeeper_nodes.yml"
+#   tasks:
+#   - name: Install kafka
+#     include_role:
+#       name: kafka
+#     when: install_kafka_confluent
+
+- name: Configure SASL Users 
+  hosts: kafka_brokers
+  serial: "{{ serial_override | default(1) }}"
+  become: true
+  vars_files:
+    - "../group_vars/all.yml"
+    - "../group_vars/kafka_brokers.yml"
+    - "../group_vars/zookeeper_nodes.yml"
+  tasks:
+    - name: Configure SASL
+      include_role:
+        name: sasl_users
+      when: configure_sasl

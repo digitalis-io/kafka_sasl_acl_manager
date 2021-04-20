@@ -1,5 +1,3 @@
-KafkaClient {
-  org.apache.kafka.common.security.plain.PlainLoginModule required
-  username="exampleproducername1"
-  password="{{ exampleproducerpassword }}";
-};
+sasl.mechanism={{ kafka_sasl_enabled_mechanisms }}
+security.protocol={{ kafka_listener_protocol }}
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="admin" password="{{ admin_user_password }}";

@@ -1,0 +1,8 @@
+# General file ignores
+.DS_Store
+
+molecule-venv/
+molecule/default/tests/__pycache__
+
+super-linter.log
+.vscode

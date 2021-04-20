@@ -1,0 +1,26 @@
+---
+- name: Set authorized key from file
+  hosts: all
+  serial: "{{ serial_override | default(1) }}"
+  become: true
+  vars_files:
+    - "../group_vars/all.yml"
+  tasks:
+    - name: Copy ssh key
+      authorized_key:
+        user: root
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+      when: install_ssh_key
+
+- name: Install OpenJDK
+  hosts: all
+  serial: "{{ serial_override | default(1) }}"
+  become: true
+  vars_files:
+    - "../group_vars/all.yml"
+  tasks:
+  - name: Install openjdk
+    include_role:
+      name: openjdk
+    when: install_openjdk

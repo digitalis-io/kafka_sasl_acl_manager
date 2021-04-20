@@ -1,12 +1,16 @@
 ---
 - name: get list of all topics created on kafka
-  command: "unset KAFKA_JMX_OPTS;{{ kafka_path }}/bin/kafka-topics.sh --zookeeper {{ inventory_hostname }}:2181 --list"
+  command: "{{ kafka_path }}/bin/kafka-topics.sh --zookeeper {{ kafka_zookeeper_connect }} --list"
   register: topiclist
-- name: Display the list of existing topics on the output
-  debug: var=topiclist
+
+# - name: Display the list of existing topics on the output
+#   debug: var=topiclist
+
 - name: create all topics
-  command: "unset KAFKA_JMX_OPTS;{{ kafka_path }}/bin/kafka-topics.sh --create --zookeeper {{ inventory_hostname }}:2181 --replication-factor 2 --partitions 3 --topic {{ item.topic }}"
+  command: "{{ kafka_path }}/bin/kafka-topics.sh --create --zookeeper {{ kafka_zookeeper_connect }} --replication-factor {{ kafka_replication_count }} --partitions {{ kafka_partition_count }} --topic {{ item.topic }}"
   loop: "{{ topics_acl_users }}"
   when: 'item.topic not in topiclist.stdout'
-- name: Pause topic creation for n amount of seconds so kafka broker balances
-  pause: seconds=5
+
+- name: Pause topic creation for 2 seconds between topic create commands
+  pause: 
+    seconds: 2
