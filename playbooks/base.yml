@@ -19,7 +19,20 @@
   become: true
   vars_files:
     - "../group_vars/all.yml"
-  tasks:
+  tasks:  
+  - name: Update Package Manager Caches
+    yum:
+      update_cache: yes
+    when: ansible_distribution == 'CentOS' or
+          ansible_distribution == 'Red Hat Enterprise Linux' or
+          ansible_distribution == 'RedHat' or
+          ansible_distribution == 'Fedora'
+  
+  - name: Update Package Manager Caches
+    apt:
+      update_cache: yes
+    when: ansible_distribution == 'Ubuntu' or ansible_os_family == 'Debian'
+  
   - name: Install openjdk
     include_role:
       name: openjdk

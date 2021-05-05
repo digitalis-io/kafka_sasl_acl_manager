@@ -5,6 +5,8 @@
 install_ssh_key: true
 ## Setup Java if it is not part of your other provisioning
 install_openjdk: true
+# java_packages: openjdk-8-jdk
+##java-1.8.0-openjdk
 
 ## TODO: Cater for Confluent Platform of Zookeeper and Kafka
 ## This naming convention can change
@@ -15,6 +17,8 @@ configure_topics: true
 ## Setup Authentication and Access Controls
 configure_sasl: true
 configure_acl: true
+set_producer_consumer: true
+set_principal_direct: true
 
 
 # Some Kafka default config variables
@@ -38,20 +42,46 @@ kafka_authorizer_class_name: "kafka.security.authorizer.AclAuthorizer" # This ha
 
 topics_acl_users:
 #### This sequence needs to be repeated for every topic ####
-- topic: metricbeat # The topic name that you want the Consumer and Producer groups to have ACL's on.
+# The topic name that you want the Consumer and Producer groups to have ACL's on.
+- topic: metricbeat
   consumers:
-  - group: metricebeatCon1
+  - group: metricbeatCon1
     username: user1
-  - group: metricebeatCon2
+  - group: metricbeatCon2
     username: user2
   producers:
-  # NOTE: Can have more than 1 username but cannot have wildcard and usernames.
-  # - '*'   # Allows all authenticated users to write to a topic
-  - user1 # Specific user has access to a topic. Should match a user in the JAAS.CONF file.
+  - user1 
   - user2
- 
+  operations:
+  - username: user1
+    operation: "--operation Read --operation Write --operation Describe"
+    status: add
+  - username: user2
+    operation: "--operation Read --operation Write --operation Describe"
+    status: remove
+- topic: packetbeat
+  consumers:
+  - group: packetbeatCon1
+    username: user3
+  - group: packetbeatCon2
+    username: user4
+  producers:
+  - user3 
+  - user4
+  operations:
+  - username: user3
+    operation: "--operation Read --operation Write --operation Describe"
+    status: add
+  - username: user4
+    operation: "--operation Read --operation Write --operation Describe"
+    status: remove
+ # NOTES: Can have more than 1 username but cannot have wildcard and usernames.
+ # Specific user has access to a topic. Should match a user in the JAAS.CONF file.
+ # '*' instead of username allows all authenticated users to write/consume to a topic
+
 ############################################################
 ## TODO: Setup plays to include more than one authoriser and more than one port and client type
+## TODO: Setup Zookeeper ACL and SASL access.
 ## TODO: Build and refine plays to include below logic steps.
 # configure_kafka: false
 # configure_ssl: false

@@ -16,4 +16,6 @@ kafka_sasl_users:
   password: password2
 - name: user3
   password: password3
+- name: user4
+  password: password4
 #################################################

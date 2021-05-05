@@ -1,0 +1,9 @@
+[zookeeper-nodes]
+loglh1v.vagrant.test zookeeper_id=1
+
+[kafka-nodes]
+loglh2v.vagrant.test kafka_broker_id=1 kafka_listener_hostname=loglh2v.vagrant.test
+loglh3v.vagrant.test kafka_broker_id=2 kafka_listener_hostname=loglh3v.vagrant.test
+
+[kafka-nodes:vars]
+kafka_zookeeper_connect='loglh1v.vagrant.test:2181'

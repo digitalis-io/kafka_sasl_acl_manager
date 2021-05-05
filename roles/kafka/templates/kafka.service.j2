@@ -11,7 +11,7 @@ ExecStart={{ kafka_dir }}/bin/kafka-server-start.sh /etc/kafka/server.properties
 ExecStop={{ kafka_dir }}/bin/kafka-server-stop.sh
 User={{ kafka_user }}
 Group={{ kafka_group }}
-{% if configure_sasl %}   
+{% if 'SASL' in  kafka_listener_protocol %}   
     Environment="KAFKA_OPTS={{ kafka_opts }}"
 {% endif %}
 
