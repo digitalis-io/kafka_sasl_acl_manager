@@ -1,9 +1,9 @@
 - name: kafka
-  src: https://github.com/sleighzy/ansible-kafka.git
+  src: https://github.com/digitalis-io/ansible-kafka.git
   version: master
 - name: zookeeper
-  src: https://github.com/sleighzy/ansible-zookeeper.git
+  src: https://github.com/digitalis-io/ansible-zookeeper.git
   version: master
 - name: openjdk
-  src: https://github.com/geerlingguy/ansible-role-java.git
+  src: https://github.com/digitalis-io/ansible-role-java.git
   version: master

@@ -4,11 +4,16 @@
   block:
   - name: execute command
     shell: 
-      "{{ kafka_path }}/bin/kafka-acls.sh --authorizer kafka.security.auth.SimpleAclAuthorizer --authorizer-properties zookeeper.connect={{ kafka_zookeeper_connect }} --add --allow-principal User:{{ item.1 }}  --producer --topic {{ item.0.topic }}; sleep 3"
+      "{{ kafka_path }}/bin/kafka-acls.sh --authorizer {{ kafka_authorizer_class_name }} --authorizer-properties zookeeper.connect={{ kafka_zookeeper_connect }} --add --allow-principal User:{{ item.1 }}  --producer --topic {{ item.0.topic }}; sleep 3"
     loop: "{{ topics_acl_users|subelements('producers') }}"
-    when: item.0
+    when: item.0 and set_producer_consumer
 
   - name: update ACL read access for consumers
-    shell: "{{ kafka_path }}/bin/kafka-acls.sh --authorizer kafka.security.auth.SimpleAclAuthorizer --authorizer-properties zookeeper.connect={{ kafka_zookeeper_connect }} --add --allow-principal User:{{ item.1.username }} --consumer --topic {{ item.0.topic }} --group {{ item.1.group }}; sleep 1"
+    shell: "{{ kafka_path }}/bin/kafka-acls.sh --authorizer {{ kafka_authorizer_class_name }} --authorizer-properties zookeeper.connect={{ kafka_zookeeper_connect }} --add --allow-principal User:{{ item.1.username }} --consumer --topic {{ item.0.topic }} --group {{ item.1.group }}; sleep 1"
     loop: "{{ topics_acl_users|subelements('consumers') }}"
-    when: item.0
+    when: item.0 and set_producer_consumer
+
+  - name: update ACL specific access for principal
+    shell: "echo 'y' | {{ kafka_path }}/bin/kafka-acls.sh --authorizer {{ kafka_authorizer_class_name }} --authorizer-properties zookeeper.connect={{ kafka_zookeeper_connect }} --{{ item.1.status }} --allow-principal User:{{ item.1.username }} {{ item.1.operation }} --topic {{ item.0.topic }}; sleep 1"
+    loop: "{{ topics_acl_users|subelements('operations') }}"
+    when: item.0 and set_principal_direct

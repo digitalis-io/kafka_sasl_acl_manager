@@ -1,9 +1,0 @@
-proseWrap: 'always'
-singleQuote: true
-trailingComma: 'all'
-overrides:
-  - files:
-      - '*.yml'
-      - '*.yaml'
-    options:
-      proseWrap: 'never'
